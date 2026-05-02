@@ -1,0 +1,44 @@
+{
+  "name": "copy-cursor-point",
+  "displayName": "Copy Cursor Point",
+  "description": "Copy cursor position (file:line:col) to clipboard",
+  "version": "0.1.0",
+  "publisher": "wupengfei",
+  "engines": { "vscode": "^1.85.0" },
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "copy-cursor-point.copyCursorPosition",
+        "title": "Copy Cursor Position"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "copy-cursor-point.copyCursorPosition",
+          "group": "navigation"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "copy-cursor-point.copyCursorPosition",
+        "key": "cmd+alt+c",
+        "mac": "cmd+alt+c",
+        "linux": "ctrl+alt+c",
+        "win": "ctrl+alt+c",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "pretest:integration": "npm run compile",
+    "test:integration": "node ./out/test/runTest.js"
+  }
+}
