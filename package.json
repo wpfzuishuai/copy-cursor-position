@@ -1,9 +1,9 @@
 {
-  "name": "copy-cursor-point",
-  "displayName": "Copy Cursor Point",
+  "name": "copy-cursor-position",
+  "displayName": "Copy Cursor Position",
   "description": "Copy cursor position (file:line:col) to clipboard",
   "version": "0.1.0",
-  "publisher": "jessewu",
+  "publisher": "JesseWu",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -12,21 +12,21 @@
   "contributes": {
     "commands": [
       {
-        "command": "copy-cursor-point.copyCursorPosition",
+        "command": "copy-cursor-position.copyCursorPosition",
         "title": "Copy Cursor Position"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "copy-cursor-point.copyCursorPosition",
+          "command": "copy-cursor-position.copyCursorPosition",
           "group": "navigation"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "copy-cursor-point.copyCursorPosition",
+        "command": "copy-cursor-position.copyCursorPosition",
         "key": "cmd+alt+c",
         "mac": "cmd+alt+c",
         "linux": "ctrl+alt+c",

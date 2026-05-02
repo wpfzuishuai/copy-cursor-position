@@ -55,7 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Copy Cursor Position
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "copy-cursor-point.copyCursorPosition",
+      "copy-cursor-position.copyCursorPosition",
       () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
@@ -82,7 +82,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Copy Error with Position
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "copy-cursor-point.copyErrorForDiagnostic",
+      "copy-cursor-position.copyErrorForDiagnostic",
       (
         documentUri: vscode.Uri,
         relativePath: string,
@@ -130,7 +130,7 @@ export function activate(context: vscode.ExtensionContext) {
             position.line,
             position.character,
           ]);
-          const cmdUri = `command:copy-cursor-point.copyErrorForDiagnostic?${encodeURIComponent(args)}`;
+          const cmdUri = `command:copy-cursor-position.copyErrorForDiagnostic?${encodeURIComponent(args)}`;
 
           const markdown = new vscode.MarkdownString(
             `[Copy Error with Position](${cmdUri})`,
