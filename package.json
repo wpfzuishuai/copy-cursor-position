@@ -5,8 +5,8 @@
   "version": "0.1.0",
   "publisher": "wupengfei",
   "engines": { "vscode": "^1.85.0" },
-  "activationEvents": [],
-  "main": "./out/extension.js",
+  "activationEvents": ["onCommand:copy-cursor-point.copyCursorPosition"],
+  "main": "./out/src/extension.js",
   "contributes": {
     "commands": [
       {
