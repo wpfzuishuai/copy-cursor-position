@@ -23,4 +23,36 @@ describe('formatPosition', () => {
 
     expect(result).toBe('src/index.ts:1:1-3:5');
   });
+
+  it('handles first line first column (0,0 to 1:1)', () => {
+    const result = formatPosition({
+      relativePath: 'a.ts',
+      line: 0,
+      character: 0,
+    });
+
+    expect(result).toBe('a.ts:1:1');
+  });
+
+  it('handles large line and character numbers', () => {
+    const result = formatPosition({
+      relativePath: 'deep/nested/file.ts',
+      line: 999,
+      character: 99,
+    });
+
+    expect(result).toBe('deep/nested/file.ts:1000:100');
+  });
+
+  it('handles selection where start equals end (degenerate range)', () => {
+    const result = formatPosition({
+      relativePath: 'file.ts',
+      line: 5,
+      character: 3,
+      endLine: 5,
+      endCharacter: 3,
+    });
+
+    expect(result).toBe('file.ts:6:4-6:4');
+  });
 });
