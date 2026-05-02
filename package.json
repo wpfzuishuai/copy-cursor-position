@@ -3,7 +3,7 @@
   "displayName": "Copy Cursor Point",
   "description": "Copy cursor position (file:line:col) to clipboard",
   "version": "0.1.0",
-  "publisher": "wupengfei",
+  "publisher": "jessewu",
   "engines": {
     "vscode": "^1.85.0"
   },
