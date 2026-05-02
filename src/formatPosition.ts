@@ -17,3 +17,19 @@ export function formatPosition(params: FormatParams): string {
 
   return start;
 }
+
+export type DiagnosticSeverity = 'error' | 'warning' | 'info' | 'hint';
+
+export type FormatDiagnosticParams = {
+  relativePath: string;
+  line: number;
+  character: number;
+  severity: DiagnosticSeverity;
+  message: string;
+};
+
+export function formatDiagnosticPosition(params: FormatDiagnosticParams): string {
+  const { relativePath, line, character, severity, message } = params;
+  const position = `${relativePath}:${line + 1}:${character + 1}`;
+  return `${position} - ${severity}: ${message}`;
+}

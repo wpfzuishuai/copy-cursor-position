@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatPosition } from '../src/formatPosition';
+import { formatPosition, formatDiagnosticPosition } from '../src/formatPosition';
 
 describe('formatPosition', () => {
   it('converts 0-based cursor position to 1-based string', () => {
@@ -54,5 +54,33 @@ describe('formatPosition', () => {
     });
 
     expect(result).toBe('file.ts:6:4-6:4');
+  });
+});
+
+describe('formatDiagnosticPosition', () => {
+  it('formats a diagnostic with position and error severity', () => {
+    const result = formatDiagnosticPosition({
+      relativePath: 'src/foo.ts',
+      line: 41,
+      character: 16,
+      severity: 'error',
+      message: "Type 'string' is not assignable to type 'number'.",
+    });
+
+    expect(result).toBe(
+      "src/foo.ts:42:17 - error: Type 'string' is not assignable to type 'number'.",
+    );
+  });
+
+  it('formats a warning diagnostic', () => {
+    const result = formatDiagnosticPosition({
+      relativePath: 'src/bar.ts',
+      line: 0,
+      character: 0,
+      severity: 'warning',
+      message: 'Unused variable x.',
+    });
+
+    expect(result).toBe('src/bar.ts:1:1 - warning: Unused variable x.');
   });
 });
