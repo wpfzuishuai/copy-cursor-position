@@ -1,8 +1,13 @@
 .vscode/**
 .git/**
+.gitignore
+.claude/**
+docs/**
 node_modules/**
 src/**
 test/**
+out/test/**
 tsconfig.json
 vitest.config.ts
 **/*.ts
+.vscodeignore

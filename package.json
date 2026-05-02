@@ -7,31 +7,19 @@
   "engines": {
     "vscode": "^1.85.0"
   },
-  "activationEvents": [
-    "onCommand:copy-cursor-point.copyCursorPosition",
-    "onCommand:copy-cursor-point.copyErrorWithPosition",
-    "onCommand:copy-cursor-point.copyErrorForDiagnostic"
-  ],
+  "activationEvents": ["onStartupFinished"],
   "main": "./out/src/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "copy-cursor-point.copyCursorPosition",
         "title": "Copy Cursor Position"
-      },
-      {
-        "command": "copy-cursor-point.copyErrorWithPosition",
-        "title": "Copy Error with Position"
       }
     ],
     "menus": {
       "editor/context": [
         {
           "command": "copy-cursor-point.copyCursorPosition",
-          "group": "navigation"
-        },
-        {
-          "command": "copy-cursor-point.copyErrorWithPosition",
           "group": "navigation"
         }
       ]
@@ -43,14 +31,6 @@
         "mac": "cmd+alt+c",
         "linux": "ctrl+alt+c",
         "win": "ctrl+alt+c",
-        "when": "editorTextFocus"
-      },
-      {
-        "command": "copy-cursor-point.copyErrorWithPosition",
-        "key": "cmd+alt+shift+c",
-        "mac": "cmd+alt+shift+c",
-        "linux": "ctrl+alt+shift+c",
-        "win": "ctrl+alt+shift+c",
         "when": "editorTextFocus"
       }
     ]

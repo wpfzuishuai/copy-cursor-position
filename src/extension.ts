@@ -1,22 +1,28 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 import {
   formatPosition,
   formatDiagnosticPosition,
   type FormatParams,
   type DiagnosticSeverity,
-} from './formatPosition';
+} from "./formatPosition";
 
 const SEVERITY_MAP: Record<vscode.DiagnosticSeverity, DiagnosticSeverity> = {
-  [vscode.DiagnosticSeverity.Error]: 'error',
-  [vscode.DiagnosticSeverity.Warning]: 'warning',
-  [vscode.DiagnosticSeverity.Information]: 'info',
-  [vscode.DiagnosticSeverity.Hint]: 'hint',
+  [vscode.DiagnosticSeverity.Error]: "error",
+  [vscode.DiagnosticSeverity.Warning]: "warning",
+  [vscode.DiagnosticSeverity.Information]: "info",
+  [vscode.DiagnosticSeverity.Hint]: "hint",
 };
 
-function getDocumentInfo(editor: vscode.TextEditor): { document: vscode.TextDocument; relativePath: string; selection: vscode.Selection } | null {
+function getDocumentInfo(
+  editor: vscode.TextEditor,
+): {
+  document: vscode.TextDocument;
+  relativePath: string;
+  selection: vscode.Selection;
+} | null {
   const document = editor.document;
   if (document.isUntitled) {
-    vscode.window.showWarningMessage('请先保存文件');
+    vscode.window.showWarningMessage("请先保存文件");
     return null;
   }
 
@@ -42,75 +48,20 @@ function getDiagnosticAtCursor(
 
 function copyToClipboard(text: string): void {
   vscode.env.clipboard.writeText(text).then(
-    () => {
-      vscode.window.showInformationMessage(`已复制: ${text}`);
-    },
-    (err: Error) => {
-      vscode.window.showErrorMessage(`复制失败: ${err.message}`);
-    },
+    () => vscode.window.showInformationMessage(`已复制: ${text}`),
+    (err: Error) => vscode.window.showErrorMessage(`复制失败: ${err.message}`),
   );
-}
-
-function copyErrorForDiagnostic(
-  document: vscode.TextDocument,
-  relativePath: string,
-  line: number,
-  character: number,
-): void {
-  const pos = new vscode.Position(line, character);
-  const diagnostic = getDiagnosticAtCursor(document, pos);
-  if (!diagnostic) {
-    vscode.window.showInformationMessage('光标位置没有诊断信息');
-    return;
-  }
-
-  copyToClipboard(
-    formatDiagnosticPosition({
-      relativePath,
-      line,
-      character,
-      ...diagnostic,
-    }),
-  );
-}
-
-class CopyErrorCodeActionProvider implements vscode.CodeActionProvider {
-  provideCodeActions(
-    document: vscode.TextDocument,
-    _range: vscode.Range | vscode.Selection,
-    context: vscode.CodeActionContext,
-  ): vscode.CodeAction[] {
-    if (document.isUntitled) return [];
-
-    const relativePath = vscode.workspace.asRelativePath(document.uri);
-    const actions: vscode.CodeAction[] = [];
-
-    for (const d of context.diagnostics) {
-      const action = new vscode.CodeAction(
-        'Copy Error with Position',
-        vscode.CodeActionKind.Empty,
-      );
-      action.command = {
-        command: 'copy-cursor-point.copyErrorForDiagnostic',
-        title: 'Copy Error with Position',
-        arguments: [document, relativePath, d.range.start.line, d.range.start.character],
-      };
-      action.isPreferred = true;
-      actions.push(action);
-    }
-
-    return actions;
-  }
 }
 
 export function activate(context: vscode.ExtensionContext) {
+  // Copy Cursor Position
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'copy-cursor-point.copyCursorPosition',
+      "copy-cursor-point.copyCursorPosition",
       () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
-          vscode.window.showWarningMessage('没有打开的编辑器');
+          vscode.window.showWarningMessage("没有打开的编辑器");
           return;
         }
         const info = getDocumentInfo(editor);
@@ -120,7 +71,6 @@ export function activate(context: vscode.ExtensionContext) {
         const { line, character } = selection.start;
 
         const params: FormatParams = { relativePath, line, character };
-
         if (!selection.isEmpty) {
           params.endLine = selection.end.line;
           params.endCharacter = selection.end.character;
@@ -131,36 +81,71 @@ export function activate(context: vscode.ExtensionContext) {
     ),
   );
 
+  // Copy Error with Position — Quick Fix menu (Cmd+.)
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'copy-cursor-point.copyErrorWithPosition',
-      () => {
-        const editor = vscode.window.activeTextEditor;
-        if (!editor) {
-          vscode.window.showWarningMessage('没有打开的编辑器');
+      "copy-cursor-point.copyErrorForDiagnostic",
+      (
+        documentUri: vscode.Uri,
+        relativePath: string,
+        line: number,
+        character: number,
+      ) => {
+        const doc = vscode.workspace.textDocuments.find(
+          (d) => d.uri.toString() === documentUri.toString(),
+        );
+        if (!doc) return;
+        const pos = new vscode.Position(line, character);
+        const diagnostic = getDiagnosticAtCursor(doc, pos);
+        if (!diagnostic) {
+          vscode.window.showInformationMessage("光标位置没有诊断信息");
           return;
         }
-        const info = getDocumentInfo(editor);
-        if (!info) return;
-
-        const { document, relativePath, selection } = info;
-        copyErrorForDiagnostic(document, relativePath, selection.active.line, selection.active.character);
+        copyToClipboard(
+          formatDiagnosticPosition({
+            relativePath,
+            line,
+            character,
+            ...diagnostic,
+          }),
+        );
       },
     ),
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'copy-cursor-point.copyErrorForDiagnostic',
-      copyErrorForDiagnostic,
-    ),
-  );
-
-  context.subscriptions.push(
     vscode.languages.registerCodeActionsProvider(
-      { scheme: 'file' },
-      new CopyErrorCodeActionProvider(),
-      { providedCodeActionKinds: [vscode.CodeActionKind.Empty] },
+      { scheme: "file" },
+      {
+        provideCodeActions(
+          document: vscode.TextDocument,
+          _range: vscode.Range | vscode.Selection,
+          context: vscode.CodeActionContext,
+        ): vscode.CodeAction[] {
+          if (document.isUntitled) return [];
+
+          const relativePath = vscode.workspace.asRelativePath(document.uri);
+
+          return context.diagnostics.map((d) => {
+            const action = new vscode.CodeAction(
+              "Copy Error with Position",
+              vscode.CodeActionKind.QuickFix,
+            );
+            action.command = {
+              command: "copy-cursor-point.copyErrorForDiagnostic",
+              title: "Copy Error with Position",
+              arguments: [
+                document.uri,
+                relativePath,
+                d.range.start.line,
+                d.range.start.character,
+              ],
+            };
+            return action;
+          });
+        },
+      },
+      { providedCodeActionKinds: [vscode.CodeActionKind.QuickFix] },
     ),
   );
 }
