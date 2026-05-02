@@ -51,6 +51,58 @@ function copyToClipboard(text: string): void {
   );
 }
 
+function copyErrorForDiagnostic(
+  document: vscode.TextDocument,
+  relativePath: string,
+  line: number,
+  character: number,
+): void {
+  const pos = new vscode.Position(line, character);
+  const diagnostic = getDiagnosticAtCursor(document, pos);
+  if (!diagnostic) {
+    vscode.window.showInformationMessage('光标位置没有诊断信息');
+    return;
+  }
+
+  copyToClipboard(
+    formatDiagnosticPosition({
+      relativePath,
+      line,
+      character,
+      ...diagnostic,
+    }),
+  );
+}
+
+class CopyErrorCodeActionProvider implements vscode.CodeActionProvider {
+  provideCodeActions(
+    document: vscode.TextDocument,
+    _range: vscode.Range | vscode.Selection,
+    context: vscode.CodeActionContext,
+  ): vscode.CodeAction[] {
+    if (document.isUntitled) return [];
+
+    const relativePath = vscode.workspace.asRelativePath(document.uri);
+    const actions: vscode.CodeAction[] = [];
+
+    for (const d of context.diagnostics) {
+      const action = new vscode.CodeAction(
+        'Copy Error with Position',
+        vscode.CodeActionKind.Empty,
+      );
+      action.command = {
+        command: 'copy-cursor-point.copyErrorForDiagnostic',
+        title: 'Copy Error with Position',
+        arguments: [document, relativePath, d.range.start.line, d.range.start.character],
+      };
+      action.isPreferred = true;
+      actions.push(action);
+    }
+
+    return actions;
+  }
+}
+
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
@@ -92,23 +144,23 @@ export function activate(context: vscode.ExtensionContext) {
         if (!info) return;
 
         const { document, relativePath, selection } = info;
-        const position = selection.active;
-        const diagnostic = getDiagnosticAtCursor(document, position);
-
-        if (!diagnostic) {
-          vscode.window.showInformationMessage('光标位置没有诊断信息');
-          return;
-        }
-
-        copyToClipboard(
-          formatDiagnosticPosition({
-            relativePath,
-            line: position.line,
-            character: position.character,
-            ...diagnostic,
-          }),
-        );
+        copyErrorForDiagnostic(document, relativePath, selection.active.line, selection.active.character);
       },
+    ),
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'copy-cursor-point.copyErrorForDiagnostic',
+      copyErrorForDiagnostic,
+    ),
+  );
+
+  context.subscriptions.push(
+    vscode.languages.registerCodeActionsProvider(
+      { scheme: 'file' },
+      new CopyErrorCodeActionProvider(),
+      { providedCodeActionKinds: [vscode.CodeActionKind.Empty] },
     ),
   );
 }

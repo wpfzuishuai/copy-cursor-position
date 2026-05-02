@@ -9,7 +9,8 @@
   },
   "activationEvents": [
     "onCommand:copy-cursor-point.copyCursorPosition",
-    "onCommand:copy-cursor-point.copyErrorWithPosition"
+    "onCommand:copy-cursor-point.copyErrorWithPosition",
+    "onCommand:copy-cursor-point.copyErrorForDiagnostic"
   ],
   "main": "./out/src/extension.js",
   "contributes": {
