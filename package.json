@@ -4,8 +4,12 @@
   "description": "Copy cursor position (file:line:col) to clipboard",
   "version": "0.1.0",
   "publisher": "wupengfei",
-  "engines": { "vscode": "^1.85.0" },
-  "activationEvents": ["onCommand:copy-cursor-point.copyCursorPosition"],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "activationEvents": [
+    "onCommand:copy-cursor-point.copyCursorPosition"
+  ],
   "main": "./out/src/extension.js",
   "contributes": {
     "commands": [
@@ -40,5 +44,13 @@
     "test:watch": "vitest",
     "pretest:integration": "npm run compile",
     "test:integration": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^25.6.0",
+    "@types/vscode": "^1.118.0",
+    "@vscode/test-electron": "^2.5.2",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
   }
 }
