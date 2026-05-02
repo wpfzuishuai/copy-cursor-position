@@ -7,7 +7,7 @@
   "engines": {
     "vscode": "^1.85.0"
   },
-  "activationEvents": ["onStartupFinished"],
+  "activationEvents": ["*"],
   "main": "./out/src/extension.js",
   "contributes": {
     "commands": [

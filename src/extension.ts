@@ -13,9 +13,7 @@ const SEVERITY_MAP: Record<vscode.DiagnosticSeverity, DiagnosticSeverity> = {
   [vscode.DiagnosticSeverity.Hint]: "hint",
 };
 
-function getDocumentInfo(
-  editor: vscode.TextEditor,
-): {
+function getDocumentInfo(editor: vscode.TextEditor): {
   document: vscode.TextDocument;
   relativePath: string;
   selection: vscode.Selection;
@@ -81,7 +79,7 @@ export function activate(context: vscode.ExtensionContext) {
     ),
   );
 
-  // Copy Error with Position — Quick Fix menu (Cmd+.)
+  // Copy Error with Position
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "copy-cursor-point.copyErrorForDiagnostic",
@@ -113,39 +111,35 @@ export function activate(context: vscode.ExtensionContext) {
     ),
   );
 
+  // Hover provider: "Copy Error with Position" below error message
   context.subscriptions.push(
-    vscode.languages.registerCodeActionsProvider(
+    vscode.languages.registerHoverProvider(
       { scheme: "file" },
       {
-        provideCodeActions(
+        provideHover(
           document: vscode.TextDocument,
-          _range: vscode.Range | vscode.Selection,
-          context: vscode.CodeActionContext,
-        ): vscode.CodeAction[] {
-          if (document.isUntitled) return [];
+          position: vscode.Position,
+        ): vscode.Hover | undefined {
+          const diagnostic = getDiagnosticAtCursor(document, position);
+          if (!diagnostic) return undefined;
 
           const relativePath = vscode.workspace.asRelativePath(document.uri);
+          const args = JSON.stringify([
+            document.uri,
+            relativePath,
+            position.line,
+            position.character,
+          ]);
+          const cmdUri = `command:copy-cursor-point.copyErrorForDiagnostic?${encodeURIComponent(args)}`;
 
-          return context.diagnostics.map((d) => {
-            const action = new vscode.CodeAction(
-              "Copy Error with Position",
-              vscode.CodeActionKind.QuickFix,
-            );
-            action.command = {
-              command: "copy-cursor-point.copyErrorForDiagnostic",
-              title: "Copy Error with Position",
-              arguments: [
-                document.uri,
-                relativePath,
-                d.range.start.line,
-                d.range.start.character,
-              ],
-            };
-            return action;
-          });
+          const markdown = new vscode.MarkdownString(
+            `[Copy Error with Position](${cmdUri})`,
+          );
+          markdown.isTrusted = true;
+
+          return new vscode.Hover(markdown);
         },
       },
-      { providedCodeActionKinds: [vscode.CodeActionKind.QuickFix] },
     ),
   );
 }
