@@ -1,58 +1,8 @@
 import * as vscode from "vscode";
-import {
-  formatPosition,
-  formatDiagnosticPosition,
-  type FormatParams,
-  type DiagnosticSeverity,
-} from "./formatPosition";
-
-const SEVERITY_MAP: Record<vscode.DiagnosticSeverity, DiagnosticSeverity> = {
-  [vscode.DiagnosticSeverity.Error]: "error",
-  [vscode.DiagnosticSeverity.Warning]: "warning",
-  [vscode.DiagnosticSeverity.Information]: "info",
-  [vscode.DiagnosticSeverity.Hint]: "hint",
-};
-
-function getDocumentInfo(editor: vscode.TextEditor): {
-  document: vscode.TextDocument;
-  relativePath: string;
-  selection: vscode.Selection;
-} | null {
-  const document = editor.document;
-  if (document.isUntitled) {
-    vscode.window.showWarningMessage("请先保存文件");
-    return null;
-  }
-
-  return {
-    document,
-    relativePath: vscode.workspace.asRelativePath(document.uri),
-    selection: editor.selection,
-  };
-}
-
-function getDiagnosticAtCursor(
-  document: vscode.TextDocument,
-  position: vscode.Position,
-): { severity: DiagnosticSeverity; message: string } | null {
-  const diagnostics = vscode.languages.getDiagnostics(document.uri);
-  for (const d of diagnostics) {
-    if (d.range.contains(position)) {
-      return { severity: SEVERITY_MAP[d.severity], message: d.message };
-    }
-  }
-  return null;
-}
-
-function copyToClipboard(text: string): void {
-  vscode.env.clipboard.writeText(text).then(
-    () => vscode.window.showInformationMessage(`已复制: ${text}`),
-    (err: Error) => vscode.window.showErrorMessage(`复制失败: ${err.message}`),
-  );
-}
+import { formatPosition, formatDiagnosticPosition, type FormatParams } from "./formatPosition";
+import { getDocumentInfo, getDiagnosticAtCursor, copyToClipboard } from "./utils";
 
 export function activate(context: vscode.ExtensionContext) {
-  // Copy Cursor Position
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "copy-cursor-position.copyCursorPosition",
@@ -79,7 +29,6 @@ export function activate(context: vscode.ExtensionContext) {
     ),
   );
 
-  // Copy Error with Position
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "copy-cursor-position.copyErrorForDiagnostic",
@@ -111,7 +60,6 @@ export function activate(context: vscode.ExtensionContext) {
     ),
   );
 
-  // Hover provider: "Copy Error with Position" below error message
   context.subscriptions.push(
     vscode.languages.registerHoverProvider(
       { scheme: "file" },
