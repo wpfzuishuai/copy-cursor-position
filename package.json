@@ -1,0 +1,55 @@
+{
+  "name": "copy-cursor-position",
+  "displayName": "Copy Cursor Position",
+  "description": "Copy cursor position (file:line:col) to clipboard",
+  "version": "0.1.0",
+  "publisher": "JesseWu",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "activationEvents": ["*"],
+  "main": "./out/src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "copy-cursor-position.copyCursorPosition",
+        "title": "Copy Cursor Position"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "copy-cursor-position.copyCursorPosition",
+          "group": "navigation"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "copy-cursor-position.copyCursorPosition",
+        "key": "cmd+alt+c",
+        "mac": "cmd+alt+c",
+        "linux": "ctrl+alt+c",
+        "win": "ctrl+alt+c",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "pretest:integration": "npm run compile",
+    "test:integration": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^25.6.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.9.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  }
+}
