@@ -10,4 +10,6 @@ out/test/**
 tsconfig.json
 vitest.config.ts
 **/*.ts
+CLAUDE.md
+icon.svg
 .vscodeignore

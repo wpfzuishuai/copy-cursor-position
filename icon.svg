@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <!-- Background -->
+  <rect width="128" height="128" rx="24" fill="#2d2d30"/>
+
+  <!-- Code window -->
+  <rect x="20" y="24" width="88" height="80" rx="6" fill="#1e1e1e" stroke="#444" stroke-width="1.5"/>
+
+  <!-- Title bar dots -->
+  <circle cx="32" cy="36" r="3" fill="#ff5f57"/>
+  <circle cx="42" cy="36" r="3" fill="#febc2e"/>
+  <circle cx="52" cy="36" r="3" fill="#28c840"/>
+
+  <!-- Line numbers -->
+  <text x="28" y="58" fill="#555" font-size="7" font-family="monospace">1</text>
+  <text x="28" y="68" fill="#555" font-size="7" font-family="monospace">2</text>
+  <text x="28" y="78" fill="#555" font-size="7" font-family="monospace">3</text>
+  <text x="28" y="88" font-size="7" font-family="monospace" fill="#555">4</text>
+
+  <!-- Code lines -->
+  <rect x="38" y="53" width="60" height="3" rx="1.5" fill="#569cd6" opacity="0.6"/>
+  <rect x="38" y="63" width="50" height="3" rx="1.5" fill="#dcdcaa" opacity="0.5"/>
+  <rect x="42" y="73" width="56" height="3" rx="1.5" fill="#ce9178" opacity="0.5"/>
+
+  <!-- Cursor line (highlight) on line 3 -->
+  <rect x="38" y="71" width="64" height="10" rx="2" fill="#569cd6" opacity="0.15"/>
+
+  <!-- Cursor (blinking I-beam) -->
+  <rect x="42" y="71" width="2" height="10" rx="1" fill="#f8f8f0"/>
+
+  <!-- Position popup -->
+  <g transform="translate(18, 92)">
+    <rect x="0" y="2" width="60" height="18" rx="3" fill="#4fc1ff"/>
+    <text x="30" y="15" fill="#1e1e1e" font-size="7" font-family="monospace" text-anchor="middle" font-weight="bold">3:5</text>
+  </g>
+
+  <!-- Column indicator arrow (from popup to cursor column) -->
+  <line x1="48" y1="92" x2="44" y2="82" stroke="#4fc1ff" stroke-width="1.5"/>
+  <circle cx="44" cy="82" r="1.5" fill="#4fc1ff"/>
+
+  <!-- Clipboard icon bottom right -->
+  <g transform="translate(88, 92)">
+    <rect x="2" y="0" width="20" height="20" rx="3" fill="#007acc" stroke="#4fc1ff" stroke-width="1"/>
+    <rect x="7" y="5" width="10" height="2" rx="1" fill="#fff" opacity="0.8"/>
+    <rect x="7" y="9" width="8" height="2" rx="1" fill="#fff" opacity="0.5"/>
+    <rect x="7" y="13" width="5" height="2" rx="1" fill="#4fc1ff"/>
+  </g>
+</svg>

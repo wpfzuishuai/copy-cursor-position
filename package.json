@@ -2,8 +2,9 @@
   "name": "copy-cursor-position",
   "displayName": "Copy Cursor Position",
   "description": "Copy cursor position (file:line:col) to clipboard",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "JesseWu",
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.85.0"
   },
