@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import type { DiagnosticSeverity } from "./formatPosition";
 
+// VS Code severity enum → human-readable label
 export const SEVERITY_MAP: Record<vscode.DiagnosticSeverity, DiagnosticSeverity> = {
   [vscode.DiagnosticSeverity.Error]: "error",
   [vscode.DiagnosticSeverity.Warning]: "warning",
@@ -14,6 +15,7 @@ export function getDocumentInfo(editor: vscode.TextEditor): {
   selection: vscode.Selection;
 } | null {
   const document = editor.document;
+  // Untitled files have no filesystem path — not useful for position copying
   if (document.isUntitled) {
     vscode.window.showWarningMessage("请先保存文件");
     return null;
@@ -26,6 +28,7 @@ export function getDocumentInfo(editor: vscode.TextEditor): {
   };
 }
 
+// Find the first diagnostic (error/warning/etc.) that covers the given position
 export function getDiagnosticAtCursor(
   document: vscode.TextDocument,
   position: vscode.Position,
@@ -40,6 +43,7 @@ export function getDiagnosticAtCursor(
 }
 
 export function copyToClipboard(text: string): void {
+  // writeText is async; notify on success or failure
   vscode.env.clipboard.writeText(text).then(
     () => vscode.window.showInformationMessage(`已复制: ${text}`),
     (err: Error) => vscode.window.showErrorMessage(`复制失败: ${err.message}`),

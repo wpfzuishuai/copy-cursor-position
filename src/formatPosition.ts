@@ -9,8 +9,10 @@ export type FormatParams = {
 export function formatPosition(params: FormatParams): string {
   const { relativePath, line, character, endLine, endCharacter } = params;
 
+  // VS Code uses 0-based positions; output is 1-based for human readability
   const start = `${relativePath}:${line + 1}:${character + 1}`;
 
+  // Selection range: attach end position
   if (endLine !== undefined && endCharacter !== undefined) {
     return `${start}-${endLine + 1}:${endCharacter + 1}`;
   }

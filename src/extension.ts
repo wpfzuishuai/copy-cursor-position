@@ -4,6 +4,7 @@ import { getDocumentInfo, getDiagnosticAtCursor, copyToClipboard } from "./utils
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
+    // Copy file:line:col (with optional selection range) to clipboard
     vscode.commands.registerCommand(
       "copy-cursor-position.copyCursorPosition",
       () => {
@@ -60,6 +61,8 @@ export function activate(context: vscode.ExtensionContext) {
     ),
   );
 
+  // Inject "Copy Error with Position" link into diagnostic hover popups.
+  // Passes position data via markdown command-URI to avoid a separate command palette entry.
   context.subscriptions.push(
     vscode.languages.registerHoverProvider(
       { scheme: "file" },

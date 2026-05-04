@@ -6,9 +6,9 @@
   "publisher": "JesseWu",
   "icon": "icon.png",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.86.0"
   },
-  "activationEvents": ["*"],
+  "activationEvents": ["onStartupFinished"],
   "main": "./out/src/extension.js",
   "contributes": {
     "commands": [
