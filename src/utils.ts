@@ -2,7 +2,10 @@ import * as vscode from "vscode";
 import type { DiagnosticSeverity } from "./formatPosition";
 
 // VS Code severity enum → human-readable label
-export const SEVERITY_MAP: Record<vscode.DiagnosticSeverity, DiagnosticSeverity> = {
+export const SEVERITY_MAP: Record<
+  vscode.DiagnosticSeverity,
+  DiagnosticSeverity
+> = {
   [vscode.DiagnosticSeverity.Error]: "error",
   [vscode.DiagnosticSeverity.Warning]: "warning",
   [vscode.DiagnosticSeverity.Information]: "info",
