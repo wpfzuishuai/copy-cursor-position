@@ -12,4 +12,7 @@ vitest.config.ts
 **/*.ts
 CLAUDE.md
 icon.svg
+pnpm-lock.yaml
+pnpm-workspace.yaml
+rollup.config.mjs
 .vscodeignore
