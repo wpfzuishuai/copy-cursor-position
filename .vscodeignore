@@ -3,6 +3,7 @@
 .gitignore
 .claude/**
 docs/**
+images/**
 node_modules/**
 src/**
 test/**
