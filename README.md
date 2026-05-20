@@ -19,6 +19,8 @@ Copies file path with line and column to clipboard in `path:line:col` format.
 
 When text is selected, the same shortcut copies the full selection range in `path:startLine:startCol-endLine:endCol` format.
 
+![copy-election-range](https://raw.githubusercontent.com/wpfzuishuai/copy-cursor-position/refs/heads/main/images/copy-election-range.png)
+
 ### Copy Error with Position
 
 Copies diagnostic info at the cursor position in `path:line:col - severity: message` format.
