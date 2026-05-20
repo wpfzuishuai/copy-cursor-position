@@ -13,9 +13,11 @@ Copies file path with line and column to clipboard in `path:line:col` format.
 | Keyboard    | `Cmd+Option+C` (Mac) / `Ctrl+Alt+C` (Windows/Linux) |
 | Right-click | `Copy Cursor Position` in editor context menu       |
 
-If text is selected, copies the full range: `path:startLine:startCol-endLine:endCol`.
-
 ![copy-position](https://raw.githubusercontent.com/wpfzuishuai/copy-cursor-position/refs/heads/main/images/copy-position.png)
+
+### Copy Selection Range
+
+When text is selected, the same shortcut copies the full selection range in `path:startLine:startCol-endLine:endCol` format.
 
 ### Copy Error with Position
 
