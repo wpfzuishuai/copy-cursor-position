@@ -1,31 +1,31 @@
 import * as vscode from "vscode";
-import { formatPosition, formatDiagnosticPosition, type FormatParams } from "./formatPosition";
-import { getDocumentInfo, getDiagnosticAtCursor, copyToClipboard } from "./utils";
+import { formatPosition, formatDiagnosticPosition, type TFormatParams } from "./formatPosition";
+import { getDocumentInfo, getDiagnosticAtCursor } from "./utils";
 
-export function activate(context: vscode.ExtensionContext) {
+export const activate = (context: vscode.ExtensionContext) => {
   context.subscriptions.push(
     // Copy file:line:col (with optional selection range) to clipboard
     vscode.commands.registerCommand(
       "copy-cursor-position.copyCursorPosition",
-      () => {
+      async () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
           vscode.window.showWarningMessage("没有打开的编辑器");
           return;
         }
-        const info = getDocumentInfo(editor);
+        const info = getDocumentInfo({ editor });
         if (!info) return;
 
         const { relativePath, selection } = info;
         const { line, character } = selection.start;
 
-        const params: FormatParams = { relativePath, line, character };
-        if (!selection.isEmpty) {
-          params.endLine = selection.end.line;
-          params.endCharacter = selection.end.character;
-        }
+        const params: TFormatParams = selection.isEmpty
+          ? { relativePath, line, character }
+          : { relativePath, line, character, endLine: selection.end.line, endCharacter: selection.end.character };
 
-        copyToClipboard(formatPosition(params));
+        const text = formatPosition(params);
+        await vscode.env.clipboard.writeText(text);
+        vscode.window.showInformationMessage(`已复制: ${text}`);
       },
     ),
   );
@@ -33,7 +33,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "copy-cursor-position.copyErrorForDiagnostic",
-      (
+      async (
         documentUri: vscode.Uri,
         relativePath: string,
         line: number,
@@ -44,19 +44,19 @@ export function activate(context: vscode.ExtensionContext) {
         );
         if (!doc) return;
         const pos = new vscode.Position(line, character);
-        const diagnostic = getDiagnosticAtCursor(doc, pos);
+        const diagnostic = getDiagnosticAtCursor({ document: doc, position: pos });
         if (!diagnostic) {
           vscode.window.showInformationMessage("光标位置没有诊断信息");
           return;
         }
-        copyToClipboard(
-          formatDiagnosticPosition({
-            relativePath,
-            line,
-            character,
-            ...diagnostic,
-          }),
-        );
+        const text = formatDiagnosticPosition({
+          relativePath,
+          line,
+          character,
+          ...diagnostic,
+        });
+        await vscode.env.clipboard.writeText(text);
+        vscode.window.showInformationMessage(`已复制: ${text}`);
       },
     ),
   );
@@ -71,7 +71,7 @@ export function activate(context: vscode.ExtensionContext) {
           document: vscode.TextDocument,
           position: vscode.Position,
         ): vscode.Hover | undefined {
-          const diagnostic = getDiagnosticAtCursor(document, position);
+          const diagnostic = getDiagnosticAtCursor({ document, position });
           if (!diagnostic) return undefined;
 
           const relativePath = vscode.workspace.asRelativePath(document.uri);
@@ -93,6 +93,6 @@ export function activate(context: vscode.ExtensionContext) {
       },
     ),
   );
-}
+};
 
-export function deactivate() {}
+export const deactivate = () => {};

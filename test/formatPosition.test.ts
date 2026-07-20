@@ -83,4 +83,28 @@ describe('formatDiagnosticPosition', () => {
 
     expect(result).toBe('src/bar.ts:1:1 - warning: Unused variable x.');
   });
+
+  it('formats an info diagnostic', () => {
+    const result = formatDiagnosticPosition({
+      relativePath: 'src/baz.ts',
+      line: 10,
+      character: 5,
+      severity: 'info',
+      message: 'Consider using const.',
+    });
+
+    expect(result).toBe('src/baz.ts:11:6 - info: Consider using const.');
+  });
+
+  it('formats a hint diagnostic', () => {
+    const result = formatDiagnosticPosition({
+      relativePath: 'src/qux.ts',
+      line: 0,
+      character: 0,
+      severity: 'hint',
+      message: 'No issues found.',
+    });
+
+    expect(result).toBe('src/qux.ts:1:1 - hint: No issues found.');
+  });
 });
