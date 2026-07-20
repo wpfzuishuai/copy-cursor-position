@@ -2,7 +2,7 @@
   "name": "copy-cursor-position",
   "displayName": "Copy Cursor Position",
   "description": "Copy cursor position (file:line:col) to clipboard",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "publisher": "JesseWu",
   "repository": "https://github.com/wpfzuishuai/copy-cursor-position",
   "icon": "icon.png",
